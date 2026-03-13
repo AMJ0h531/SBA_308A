@@ -1,0 +1,23 @@
+# Smart Planner App
+
+## Description
+This is a planner application that interacts with the JSONPlaceholder API to manage tasks.
+
+## Features
+- Fetch tasks (GET)
+- Search tasks
+- Pagination
+- Add new tasks (POST)
+- Update tasks (PATCH)
+- Modular JavaScript structure
+- Async/Await and Promises
+
+## Technologies Used
+- HTML
+- CSS
+- JavaScript (ES6 Modules)
+- Fetch API
+- JSONPlaceholder API
+
+## How to Run
+Open index.html in a browser with Live Server.

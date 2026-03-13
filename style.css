@@ -1,0 +1,136 @@
+body{
+font-family:Arial;
+background:linear-gradient(135deg,#4facfe,#00f2fe);
+padding:20px;
+}
+
+.app{
+max-width:700px;
+margin:auto;
+}
+
+.task{
+background:white;
+padding:12px;
+margin:10px 0;
+border-radius:8px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 3px 8px rgba(0,0,0,0.1);
+}
+
+.task.completed{
+background:#e7ffe7;
+text-decoration:line-through;
+}
+
+button{
+padding:6px 10px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+.completeBtn{
+background:#4CAF50;
+color:white;
+}
+
+.deleteBtn{
+background:#f44336;
+color:white;
+}
+
+.dark{
+background:#121212;
+color:white;
+}
+
+.dark .task{
+background:#1e1e1e;
+}
+
+/* Progress Section */
+
+.progressSection{
+margin:20px 0;
+}
+
+#taskCounter{
+font-weight:bold;
+margin-bottom:8px;
+}
+
+/* Progress bar */
+
+.progressBar{
+width:100%;
+height:12px;
+background:#ddd;
+border-radius:10px;
+overflow:hidden;
+}
+
+#progressFill{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#4CAF50,#81C784);
+transition:width .4s ease;
+}
+
+/* Smooth Task Animations */
+
+.task{
+animation:fadeIn .4s ease;
+}
+
+@keyframes fadeIn{
+
+from{
+opacity:0;
+transform:translateY(8px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+/* Hover Effects */
+
+.task:hover{
+transform:scale(1.02);
+transition:.2s;
+}
+
+/* Buttons */
+
+button{
+transition:.2s;
+}
+
+button:hover{
+transform:scale(1.05);
+}
+
+/* Better Layout */
+
+.searchBox{
+display:flex;
+gap:10px;
+margin:15px 0;
+}
+
+.addTask{
+margin-top:25px;
+}
+
+input{
+padding:8px;
+border-radius:6px;
+border:1px solid #ccc;
+flex:1;
+}
