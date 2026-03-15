@@ -7,9 +7,63 @@ let localTasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
 const taskContainer = document.getElementById("taskContainer");
 
+const searchInput = document.getElementById("searchInput");
+
+let currentPage = 1;
+
+let localTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+const taskContainer = document.getElementById("taskContainer");
+
+const searchInput = document.getElementById("searchInput");
+
+
+
+/* LANGUAGE SETTINGS */
+
+let currentLanguage = "en";
+
+async function translateText(text){
+
+if(currentLanguage === "en") return text;
+
+try{
+
+const response = await fetch("https://libretranslate.de/translate",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+q:text,
+source:"auto",
+target:currentLanguage,
+format:"text"
+})
+});
+
+const data = await response.json();
+
+return data.translatedText;
+
+}catch(error){
+
+console.log("Translation failed");
+
+return text;
+
+}
+
+}
+
 async function loadTasks(searchTerm=""){
 
 const apiTasks = await fetchTasks(currentPage);
+
+const apiTasks = (await fetchTasks(currentPage)).map(task => ({
+...task,
+title: `Sample Task ${task.id}`
+}));
 
 const allTasks = [...localTasks, ...apiTasks];
 
@@ -17,14 +71,20 @@ const filtered = allTasks.filter(task =>
 task.title.toLowerCase().includes(searchTerm.toLowerCase())
 );
 
+// translate titles
+for(const task of filtered){
+task.title = await translateText(task.title);
+}
+
 displayTasks(filtered, taskContainer);
 
 }
 
-// Add Task
 document.getElementById("addTaskBtn").addEventListener("click", () => {
 
-const title = document.getElementById("newTaskTitle").value;
+const title = document.getElementById("newTaskTitle").value.trim();
+const dueDate = document.getElementById("dueDate").value;
+const priority = document.getElementById("priority").value;
 
 if(!title){
 alert("Enter a task");
@@ -33,8 +93,10 @@ return;
 
 const newTask = {
 id: Date.now(),
-title:title,
-completed:false
+title,
+completed:false,
+dueDate,
+priority
 };
 
 localTasks.unshift(newTask);
@@ -47,63 +109,114 @@ loadTasks();
 
 });
 
-// Task buttons
 taskContainer.addEventListener("click",(e)=>{
 
 const id = Number(e.target.dataset.id);
 
+if(!id) return;
+
 if(e.target.classList.contains("completeBtn")){
 
-localTasks = localTasks.map(task =>
-task.id===id ? {...task,completed:!task.completed} : task
-);
+localTasks = localTasks.map(task => {
+
+if(task.id === id){
+
+if(!task.completed){
+confetti({
+particleCount:100,
+spread:70
+});
+}
+
+return {...task, completed:!task.completed};
+
+}
+
+return task;
+
+});
 
 }
 
 if(e.target.classList.contains("deleteBtn")){
 
-localTasks = localTasks.filter(task => task.id!==id);
+localTasks = localTasks.filter(task => task.id !== id);
 
 }
 
-localStorage.setItem("tasks",JSON.stringify(localTasks));
+localStorage.setItem("tasks", JSON.stringify(localTasks));
 
 loadTasks();
 
 });
 
-// Search
 document.getElementById("searchBtn").addEventListener("click",()=>{
-
-const searchValue=document.getElementById("searchInput").value;
-
-loadTasks(searchValue);
-
+loadTasks(searchInput.value);
 });
 
-// Pagination
 document.getElementById("nextPage").addEventListener("click",()=>{
-
 currentPage++;
-
-loadTasks();
-
+loadTasks(searchInput.value);
 });
 
 document.getElementById("prevPage").addEventListener("click",()=>{
 
 if(currentPage>1){
 currentPage--;
-loadTasks();
+loadTasks(searchInput.value);
 }
 
 });
 
-// Dark Mode
-document.getElementById("darkModeToggle").addEventListener("click",()=>{
+const toggle = document.getElementById("darkModeToggle");
+
+if(localStorage.getItem("darkMode")==="true"){
+document.body.classList.add("dark");
+}
+
+toggle.addEventListener("click",()=>{
 
 document.body.classList.toggle("dark");
 
-});
+localStorage.setItem(
+"darkMode",
+document.body.classList.contains("dark")
+);
+
+const filtered = allTasks.filter(task =>
+task.title.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
+// translate titles
+for(const task of filtered){
+task.title = await translateText(task.title);
+}
+
+const languageSelect = document.getElementById("languageSelect");
+
+languageSelect.addEventListener("change", ()=>{
+
+currentLanguage = languageSelect.value;
+
+const filtered = allTasks.filter(task =>
+task.title.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
+// translate titles
+for(const task of filtered){
+task.title = await translateText(task.title);
+}
 
 loadTasks();
+
+const languageSelect = document.getElementById("languageSelect");
+
+languageSelect.addEventListener("change", ()=>{
+
+currentLanguage = languageSelect.value;
+
+loadTasks();
+
+});
+
+});

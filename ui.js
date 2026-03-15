@@ -1,6 +1,6 @@
 export function displayTasks(tasks, container){
 
-container.innerHTML="";
+container.innerHTML = "";
 
 let completedCount = 0;
 
@@ -11,17 +11,22 @@ if(task.completed) completedCount++;
 const div = document.createElement("div");
 
 div.classList.add("task");
+div.classList.add(task.priority || "low");
+
+div.dataset.id = task.id;
 
 if(task.completed){
 div.classList.add("completed");
 }
 
 div.innerHTML = `
+<p>
+${task.title}
+<br>
+<small>Due: ${task.dueDate || "No date"}</small>
+</p>
 
-<p>${task.title}</p>
-
-<div class="taskButtons">
-
+<div>
 <button class="completeBtn" data-id="${task.id}">
 ${task.completed ? "Undo" : "Complete"}
 </button>
@@ -29,9 +34,7 @@ ${task.completed ? "Undo" : "Complete"}
 <button class="deleteBtn" data-id="${task.id}">
 Delete
 </button>
-
 </div>
-
 `;
 
 container.appendChild(div);
@@ -40,12 +43,14 @@ container.appendChild(div);
 
 updateProgress(tasks.length, completedCount);
 
+renderCalendar(tasks);
 }
+
+
 
 function updateProgress(total, completed){
 
 const counter = document.getElementById("taskCounter");
-
 const progressFill = document.getElementById("progressFill");
 
 counter.textContent = `${completed}/${total} tasks completed`;
@@ -57,3 +62,25 @@ progressFill.style.width = percent + "%";
 }
 
 
+
+function renderCalendar(tasks){
+
+const cal = document.getElementById("calendar");
+
+cal.innerHTML = "";
+
+tasks.forEach(task => {
+
+if(task.dueDate){
+
+const item = document.createElement("div");
+
+item.textContent = `${task.dueDate} - ${task.title}`;
+
+cal.appendChild(item);
+
+}
+
+});
+
+}

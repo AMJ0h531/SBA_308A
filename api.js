@@ -1,18 +1,51 @@
-const BASE_URL = "https://ai.todoist.net/mcp"
+// API CONFIG
+export const API_KEY = "demo_key"; // not required for jsonplaceholder
 
-// const BASE_URL = "https://api.todoist.com/api/v1/search/tasks/fileter/completed/by_due_date/completed/by_completion_date";
-// const (https:api.todoist.com/api/v1/tasks/filter);
+const BASE_URL = "https://jsonplaceholder.typicode.com/todos";
 
-// const BASE_URL = "https://jsonplaceholder.typicode.com/todos";
+// Fetch tasks with pagination
+export async function fetchTasks(page = 1){
 
-export async function fetchTasks(page){
+try{
 
 const response = await fetch(`${BASE_URL}?_limit=10&_page=${page}`);
 
-return await response.json();
+if(!response.ok){
+throw new Error("API request failed");
+}
+
+const data = await response.json();
+
+return data;
+
+}catch(error){
+
+console.error("Error fetching tasks:", error);
+
+return [];
 
 }
 
+}
+
+
+// export API_KEY="b7fc7e5e7572790668d1e0add25313314536a2ef"
+
+// const BASE_URL = "https://jsonplaceholder.typicode.com/todos";
+
+// export async function fetchTasks(page){
+
+// const response = await fetch(`${BASE_URL}?_limit=10&_page=${page}`);
+
+// return await response.json();
+
+// }
+
+// const https://api.todoist.com/api/v1/tasks/filter;
+
+// const BASE_URL = "https://ai.todoist.net/mcp"
+
+// const BASE_URL = "https://api.todoist.com/api/v1/search/tasks/fileter/completed/by_due_date/completed/by_completion_date";
 // {
 // "results": [
 // {}
