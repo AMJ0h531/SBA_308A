@@ -1,32 +1,55 @@
-// API CONFIG
-export const API_KEY = "demo_key"; // not required for jsonplaceholder
+export const API_KEY = "demo_key";
 
 const BASE_URL = "https://jsonplaceholder.typicode.com/todos";
 
-// Fetch tasks with pagination
-export async function fetchTasks(page = 1){
+export async function fetchTasks(page = 1) {
+  try {
+    const response = await fetch(`${BASE_URL}?_limit=10&_page=${page}`);
 
-try{
+    if (!response.ok) {
+      throw new Error("API request failed");
+    }
 
-const response = await fetch(`${BASE_URL}?_limit=10&_page=${page}`);
+    return await response.json();
 
-if(!response.ok){
-throw new Error("API request failed");
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    return [];
+  }
 }
 
-const data = await response.json();
 
-return data;
 
-}catch(error){
 
-console.error("Error fetching tasks:", error);
+// // API CONFIG
+// export const API_KEY = "demo_key"; // not required for jsonplaceholder
 
-return [];
+// const BASE_URL = "https://jsonplaceholder.typicode.com/todos";
 
-}
+// // Fetch tasks with pagination
+// export async function fetchTasks(page = 1){
 
-}
+// try{
+
+// const response = await fetch(`${BASE_URL}?_limit=10&_page=${page}`);
+
+// if(!response.ok){
+// throw new Error("API request failed");
+// }
+
+// const data = await response.json();
+
+// return data;
+
+// }catch(error){
+
+// console.error("Error fetching tasks:", error);
+
+// return [];
+
+// }
+
+// }
 
 
 // export API_KEY="b7fc7e5e7572790668d1e0add25313314536a2ef"
